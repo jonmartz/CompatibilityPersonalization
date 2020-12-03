@@ -47,14 +47,14 @@ def get_model_dict(cmap_name):
     }
     if add_parametrized_models:
         parametrized_models = [  # [general_loss, general_diss, hist_loss, hist_diss]
-            ['L1', [0, 0, 1, 1], False],
-            ['L2', [0, 1, 1, 0], False],
-            ['L3', [0, 1, 1, 1], False],
-            ['L4', [1, 0, 0, 1], False],
-            ['L5', [1, 0, 1, 1], False],
-            ['L6', [1, 1, 0, 1], False],
-            ['L7', [1, 1, 1, 0], False],
-            ['L8', [1, 1, 1, 1], False],
+            ['m1', [0, 0, 1, 1], False],
+            ['m2', [0, 1, 1, 0], False],
+            ['m3', [0, 1, 1, 1], False],
+            ['m4', [1, 0, 0, 1], False],
+            ['m5', [1, 0, 1, 1], False],
+            ['m6', [1, 1, 0, 1], False],
+            ['m7', [1, 1, 1, 0], False],
+            ['m8', [1, 1, 1, 1], False],
         ]
         cmap = plt.cm.get_cmap(cmap_name)
         for i in range(len(parametrized_models)):
@@ -104,11 +104,8 @@ def plot_results(log_dir, dataset, models, log_set, compare_by_percentage, bin_s
         plot_std = models[model_name]['std']
         if plot_std:
             if df_by_weight_norm is None:
-                no_hist_init_avg_acc = np.average(df_by_weight[0]['no hist y'], weights=df_by_weight[0]['len'])
-                no_hist_final_avg_acc = np.average(df_by_weight[-1]['no hist y'], weights=df_by_weight[-1]['len'])
                 model_names_for_std = [i for i in model_names if models[i]['std']]
-                df_by_weight_norm = get_df_by_weight_norm(df_results, no_hist_init_avg_acc, no_hist_final_avg_acc,
-                                                          weights, model_names_for_std)
+                df_by_weight_norm = get_df_by_weight_norm(df_results, weights, model_names_for_std)
             std = [df_by_weight_norm[i]['%s y' % model_name].std() for i in range(len(weights))]
         if compare_by_percentage:
             h1_area = (x[-1] - x[0]) * h1_avg_acc
@@ -116,7 +113,7 @@ def plot_results(log_dir, dataset, models, log_set, compare_by_percentage, bin_s
         else:
             autc = auc(x, y)
         autcs_average.append(autc)
-        if model_name in ['no hist', 'model1']:
+        if model_name == 'no hist':
             no_hist_autc = autc
 
         xs.append(x)
@@ -772,7 +769,7 @@ def execute_phase(phase, log_set):
         if get_best:
             print('got best models for general set, not individual users!')
         else:
-            plot_results(log_dir, dataset, user_type, models, log_set, compare_by_percentage,
+            plot_results(log_dir, dataset, models, log_set, compare_by_percentage,
                          bin_size=bin_size, show_tradeoff_plots=True, weight_by_len=compare_models_by_weighted_avg)
     else:
         users_dir = '%s/users_%s' % (log_dir, log_set)
@@ -802,7 +799,7 @@ def execute_phase(phase, log_set):
             for user_idx in range(len(user_ids)):
                 user_id = user_ids[user_idx]
                 print('%d/%d user=%s' % (user_idx + 1, len(user_ids), user_id))
-                plot_results('%s/users_%s' % (log_dir, log_set), dataset, user_type, models, log_set,
+                plot_results('%s/users_%s' % (log_dir, log_set), dataset, models, log_set,
                              compare_by_percentage, bin_size=bin_size, user_name=user_id)
 
 

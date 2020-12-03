@@ -79,14 +79,14 @@ if __name__ == "__main__":
     # model settings
     models_to_test = {
         'no hist': [1, 1, 0, 0],
-        'L1': [0, 0, 1, 1],
-        'L2': [0, 1, 1, 0],
-        'L3': [0, 1, 1, 1],
-        'L4': [1, 0, 0, 1],
-        'L5': [1, 0, 1, 1],
-        'L6': [1, 1, 0, 1],
-        'L7': [1, 1, 1, 0],
-        'L8': [1, 1, 1, 1],
+        'm1': [0, 0, 1, 1],
+        'm2': [0, 1, 1, 0],
+        'm3': [0, 1, 1, 1],
+        'm4': [1, 0, 0, 1],
+        'm5': [1, 0, 1, 1],
+        'm6': [1, 1, 0, 1],
+        'm7': [1, 1, 1, 0],
+        'm8': [1, 1, 1, 1],
     }
 
     # experiment settings
@@ -136,7 +136,7 @@ if __name__ == "__main__":
     # default settings
     diss_weights = list(np.linspace(0, 1, weights_num))
     model_names = list(models_to_test.keys())
-    no_compat_equality_groups = [['no hist', 'L4', 'L6'], ['L1', 'L2', 'L3'], ['L5', 'L7', 'L8']]
+    no_compat_equality_groups = [['no hist', 'm4', 'm6'], ['m1', 'm2', 'm3'], ['m5', 'm7', 'm8']]
     no_compat_equality_groups_per_model = {}
     for group in no_compat_equality_groups:
         for member in group:
@@ -742,7 +742,7 @@ if __name__ == "__main__":
                 AnalyseResults.binarize_results_by_compat_values(log_dir, 'test', len(diss_weights) * 4,
                                                                  print_progress=False)
                 models_for_plotting = AnalyseResults.get_model_dict('jet')
-                AnalyseResults.plot_results(log_dir, dataset_name, user_col, models_for_plotting, 'test_bins', True,
+                AnalyseResults.plot_results(log_dir, dataset_name, models_for_plotting, 'test_bins', True,
                                             show_tradeoff_plots=show_tradeoff_plots, diss_labels=False,
                                             performance_metric=metrics[0])
             else:  # only h1
